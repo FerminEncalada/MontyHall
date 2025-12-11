@@ -74,31 +74,12 @@ class VistaCartas:
         btn_volver.pack(pady=10)
         
     def crear_area_cartas(self):
-        """Crea el área con scroll para mostrar las cartas."""
-        # Frame contenedor
-        container = tk.Frame(self.frame_principal, bg=COLOR_FONDO)
-        container.pack(pady=10, fill=tk.BOTH, expand=True)
+        """Crea el área para mostrar las cartas."""
+        # Frame contenedor para las cartas
+        self.frame_cartas = tk.Frame(self.frame_principal, bg=COLOR_FONDO)
+        self.frame_cartas.pack(pady=10)
         
-        # Canvas con scrollbar
-        canvas_scroll = tk.Canvas(container, bg=COLOR_FONDO, 
-                                 highlightthickness=0, height=300)
-        scrollbar = ttk.Scrollbar(container, orient="vertical", 
-                                 command=canvas_scroll.yview)
-        
-        self.frame_cartas = tk.Frame(canvas_scroll, bg=COLOR_FONDO)
-        
-        self.frame_cartas.bind(
-            "<Configure>",
-            lambda e: canvas_scroll.configure(scrollregion=canvas_scroll.bbox("all"))
-        )
-        
-        canvas_scroll.create_window((0, 0), window=self.frame_cartas, anchor="nw")
-        canvas_scroll.configure(yscrollcommand=scrollbar.set)
-        
-        canvas_scroll.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-        
-        # Crear las 52 cartas en una cuadrícula
+        # Crear las 52 cartas en una cuadrícula de 4 filas x 13 columnas
         for i in range(1, 53):
             fila = (i - 1) // 13
             columna = (i - 1) % 13
@@ -114,12 +95,12 @@ class VistaCartas:
             columna: Columna en la cuadrícula
         """
         frame = tk.Frame(self.frame_cartas, bg=COLOR_FONDO)
-        frame.grid(row=fila, column=columna, padx=3, pady=3)
+        frame.grid(row=fila, column=columna, padx=2, pady=2)
         
         canvas = tk.Canvas(
             frame,
-            width=60,
-            height=80,
+            width=50,
+            height=65,
             bg=COLOR_FONDO,
             highlightthickness=0
         )
@@ -132,7 +113,7 @@ class VistaCartas:
         label = tk.Label(
             frame,
             text=f"#{numero}",
-            font=("Arial", 8),
+            font=("Arial", 7),
             bg=COLOR_FONDO,
             fg=COLOR_TEXTO_SECUNDARIO
         )
@@ -148,12 +129,12 @@ class VistaCartas:
         """Dibuja una carta boca abajo."""
         canvas.delete("all")
         # Dorso de la carta
-        canvas.create_rectangle(5, 5, 55, 75,
+        canvas.create_rectangle(3, 3, 47, 62,
                                fill=COLOR_CARTA_DORSO,
                                outline="white", width=2)
         # Patrón decorativo
-        canvas.create_text(30, 40, text="🂠",
-                          font=("Arial", 30),
+        canvas.create_text(25, 32, text="🂠",
+                          font=("Arial", 24),
                           fill="white")
         
     def dibujar_carta_frente(self, canvas, numero):
@@ -164,18 +145,18 @@ class VistaCartas:
         color_texto = COLOR_CARTA_ROJA if color == "red" else COLOR_CARTA_NEGRA
         
         # Frente de la carta
-        canvas.create_rectangle(5, 5, 55, 75,
+        canvas.create_rectangle(3, 3, 47, 62,
                                fill=COLOR_CARTA_FRENTE,
                                outline="gray", width=2)
         # Valor de la carta
-        canvas.create_text(30, 40, text=carta_texto,
-                          font=("Arial", 16, "bold"),
+        canvas.create_text(25, 32, text=carta_texto,
+                          font=("Arial", 14, "bold"),
                           fill=color_texto)
         
     def dibujar_carta_seleccionada(self, canvas, numero):
         """Dibuja una carta seleccionada con borde dorado."""
         self.dibujar_carta_dorso(canvas, numero)
-        canvas.create_rectangle(2, 2, 58, 78,
+        canvas.create_rectangle(1, 1, 49, 64,
                                outline=COLOR_PUERTA_SELECCIONADA,
                                width=3)
         
